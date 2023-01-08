@@ -22,10 +22,12 @@ public class ChangeColor : MonoBehaviour
 
     private void ChangeColor_performed(InputAction.CallbackContext obj)
     {
-        Debug.Log("Ray");
         ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
         if (Physics.Raycast(ray,out hit)) 
         {
+            bool test = hit.transform.GetComponent<MeshFilter>().mesh.ToString() == "Sphere Instance (UnityEngine.Mesh)";
+            if (test) return;
             hit.transform.GetComponent<MeshRenderer>().material.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         }
     }
