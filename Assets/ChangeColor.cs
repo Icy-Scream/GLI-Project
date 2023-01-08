@@ -26,9 +26,10 @@ public class ChangeColor : MonoBehaviour
 
         if (Physics.Raycast(ray,out hit)) 
         {
-            bool test = hit.transform.GetComponent<MeshFilter>().mesh.ToString() == "Sphere Instance (UnityEngine.Mesh)";
-            if (test) return;
-            hit.transform.GetComponent<MeshRenderer>().material.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+            bool changeColorCube = hit.transform.GetComponent<MeshFilter>().mesh.ToString() == "Cube Instance (UnityEngine.Mesh)";
+            if (changeColorCube)
+                hit.transform.GetComponent<MeshRenderer>().material.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+            else return;
         }
     }
 }
