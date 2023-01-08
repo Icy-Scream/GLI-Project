@@ -1,0 +1,34 @@
+{
+    "name": "GameActions",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "7c383c1f-1154-45a9-bdf5-da1450ae4694",
+            "actions": [
+                {
+                    "name": "Change Color",
+                    "type": "Button",
+                    "id": "22611c0b-3867-444c-b275-63085a12e6b3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6a9e2dd6-e72c-4d68-8686-e36a30012eb9",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Color",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
