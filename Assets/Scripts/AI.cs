@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,6 +10,7 @@ public class AI : MonoBehaviour
     [SerializeField] List<Transform> _wayPoint;
     private int destPoint = 0;
     NavMeshAgent _agent;
+    bool _reverse = false;
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -27,8 +30,32 @@ public class AI : MonoBehaviour
 
     private void GoToNextPoint() 
     {
+        
         if (_wayPoint.Count == 0) return;
-        destPoint = Random.Range(0, _wayPoint.Count + 1);
-        _agent.destination =_wayPoint[destPoint].position;
+        ReversePoint(destPoint);
+        GetPoint();        
+
+        // destPoint = (destPoint + 1) % _wayPoint.Count; //Reset to Zero
+
     }
+
+    private void GetPoint() 
+    {
+        if (!_reverse) 
+        { 
+         _agent.destination = _wayPoint[destPoint].position;
+         destPoint++;
+        }
+        else 
+        {
+            destPoint--;
+            _agent.destination = _wayPoint[destPoint].position;
+        }
+    }
+    private void ReversePoint(int destPoint) 
+    {
+        if (destPoint == _wayPoint.Count) _reverse = true;
+        if (destPoint == 0) _reverse = false;
+    }
+        
 }
