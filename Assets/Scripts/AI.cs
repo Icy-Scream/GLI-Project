@@ -4,16 +4,21 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 public class AI : MonoBehaviour
 {
     [SerializeField] List<Transform> _wayPoint;
+    [SerializeField]private AIState currentState;
+    Animator _animator;
     private int destPoint = 0;
     NavMeshAgent _agent;
     bool _reverse = false;
+    bool _isAttacking = false;
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>(); 
     }
     void Start()
     {
@@ -21,11 +26,42 @@ public class AI : MonoBehaviour
         GoToNextPoint();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (!_agent.pathPending && _agent.remainingDistance < 0.5f)
-            GoToNextPoint();
+        if (Keyboard.current.eKey.isPressed) 
+        {
+            currentState = AIState.jumping;
+            _agent.isStopped = true;
+        }
+        if (_agent.remainingDistance < 0.5f && !_isAttacking)
+            currentState = AIState.attacking;
+        switch (currentState)
+        { 
+            case AIState.walking:
+                _agent.isStopped = false;
+                if (!_agent.pathPending && _agent.remainingDistance < 0.5f)
+                    GoToNextPoint();
+                break;
+            case AIState.jumping:
+                Debug.Log("JUMPING");
+                break;
+            case AIState.attacking:
+                if(!_isAttacking)
+                StartCoroutine(AttackRoutine());
+                break;
+        };
+        
+    }
+    IEnumerator  AttackRoutine() 
+    {
+        _isAttacking = true;
+        _animator.SetBool("Attack", true);
+        Debug.Log("Attack");
+        yield return new WaitForSeconds(3f);
+        currentState = AIState.walking;
+        yield return new WaitForSeconds(0.5f);
+        _animator.SetBool("Attack", false);
+        _isAttacking = false;
     }
 
     private void GoToNextPoint() 
@@ -34,9 +70,6 @@ public class AI : MonoBehaviour
         if (_wayPoint.Count == 0) return;
         ReversePoint(destPoint);
         GetPoint();        
-
-        // destPoint = (destPoint + 1) % _wayPoint.Count; //Reset to Zero
-
     }
 
     private void GetPoint() 
@@ -57,5 +90,5 @@ public class AI : MonoBehaviour
         if (destPoint == _wayPoint.Count) _reverse = true;
         if (destPoint == 0) _reverse = false;
     }
-        
+    private enum AIState { walking, jumping, patroling,attacking,death }
 }
