@@ -10,6 +10,7 @@ public class AI : MonoBehaviour
 {
     [SerializeField] List<Transform> _wayPoint;
     [SerializeField]private AIState currentState;
+    float jumpDetection = 1f;
     Animator _animator;
     private int destPoint = 0;
     NavMeshAgent _agent;
@@ -28,13 +29,9 @@ public class AI : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.eKey.isPressed) 
-        {
-            currentState = AIState.jumping;
-            _agent.isStopped = true;
-        }
         if (_agent.remainingDistance < 0.5f && !_isAttacking)
             currentState = AIState.attacking;
+        Jump();
         switch (currentState)
         { 
             case AIState.walking:
@@ -56,12 +53,26 @@ public class AI : MonoBehaviour
     {
         _isAttacking = true;
         _animator.SetBool("Attack", true);
-        Debug.Log("Attack");
         yield return new WaitForSeconds(3f);
         currentState = AIState.walking;
         yield return new WaitForSeconds(0.5f);
         _animator.SetBool("Attack", false);
         _isAttacking = false;
+    }
+
+    private void Jump() 
+    {
+        if (!Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, jumpDetection, 1 << 8))
+            currentState = AIState.jumping;
+    }
+    
+           
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, Vector3.down);
     }
 
     private void GoToNextPoint() 
@@ -90,5 +101,5 @@ public class AI : MonoBehaviour
         if (destPoint == _wayPoint.Count) _reverse = true;
         if (destPoint == 0) _reverse = false;
     }
-    private enum AIState { walking, jumping, patroling,attacking,death }
+    private enum AIState { walking, jumping,attacking,death }
 }

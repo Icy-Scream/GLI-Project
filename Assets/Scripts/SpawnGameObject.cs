@@ -19,10 +19,10 @@ public class SpawnGameObject : MonoBehaviour
     private void OnEnable()
     {
         _input.Player.Enable();
-        _input.Player.ChangeColor.performed += ChangeColor_performed;
+        _input.Player.ChangeColor.performed += SpawnGameObjects;
     }
 
-    private void ChangeColor_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void SpawnGameObjects(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         _ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         
