@@ -99,5 +99,5 @@ public class AI : MonoBehaviour
         if (destPoint == _wayPoint.Count) _reverse = true;
         if (destPoint == 0) _reverse = false;
     }
-    private enum AIState { walking, jumping,attacking,death }
+    private enum AIState { walking, jumping, attacking,death }
 }
